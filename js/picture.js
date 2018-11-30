@@ -86,11 +86,9 @@ photoContainer.appendChild(photoFragment);
 // 4. Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива
 
 var bigPicture = document.querySelector('.big-picture');
-
-bigPicture.classList.remove('hidden');
+// bigPicture.classList.remove('hidden');
 
 bigPicture.querySelector('.big-picture__img').src = photos[0].url;
-
 bigPicture.querySelector('.comments-count').textContent = photos[0].comments.length;
 bigPicture.querySelector('.likes-count').textContent = photos[0].likes;
 bigPicture.querySelector('.social__caption').textContent = photos[0].description;
@@ -111,10 +109,37 @@ for (var commentItem = 0; commentItem < photos[0].comments.length; commentItem++
   bigCommentFragment.appendChild(createBigComment(photos[0].comments[commentItem]));
 }
 
-bigCommentsContainer.appendChild(bigCommentFragment);
+// bigCommentsContainer.appendChild(bigCommentFragment);
 
 
 // 5. Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader, добавив им класс .visually-hidden.
 
-document.querySelector('.social__comment-count').classList.add('visually-hidden');
-document.querySelector('.comments-loader').classList.add('visually-hidden');
+// document.querySelector('.social__comment-count').classList.add('visually-hidden');
+// document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+
+// После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения
+var imgUploadInput = document.querySelector('#upload-file');
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var uploadCloseButton = imgUploadOverlay.querySelector('#upload-cancel');
+var ESC_KEYCODE = 27;
+
+var closeUploadOverlay = function () {
+  imgUploadOverlay.classList.add('hidden');
+};
+
+imgUploadInput.addEventListener('change', function () {
+  imgUploadOverlay.classList.remove('hidden');
+});
+
+// закрытие окна загрузки изображения
+// по клику на крестик
+uploadCloseButton.addEventListener('click', closeUploadOverlay);
+// по esc
+window.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (!imgUploadOverlay.classList.contains('hidden')) {
+      closeUploadOverlay();
+    }
+  }
+});
