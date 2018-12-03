@@ -179,9 +179,9 @@ var lineCoordinates;
 var lineWidth;
 var currentEffect = '';
 
-var resetEffect = function () {
-  previewImg.classList = ('effects__preview--' + currentEffect);
-};
+// var resetEffect = function () {
+//   previewImg.classList = ('effects__preview--' + currentEffect);
+// };
 
 var getElementWidth = function (elem) {
   var elemCoordinates = elem.getBoundingClientRect();
@@ -218,7 +218,7 @@ var setEffect = function (effect) {
       imgUploadPreview.style = setFilter(currentEffect, 0.2);
     }
     // При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.
-    resetEffect();
+    previewImg.classList = ('effects__preview--' + currentEffect);
   });
 };
 
@@ -235,7 +235,7 @@ imgUploadInput.addEventListener('change', function () {
   for (var effectItem = 0; effectItem < effects.length; effectItem++) {
     if (effects[effectItem].checked) { // ищу установленный по умолчанию эффект
       currentEffect = effects[effectItem].value;
-      resetEffect(); // применяю эффект, установленный по умолчинию в разметке
+      previewImg.classList = ('effects__preview--' + currentEffect); // применяю эффект, установленный по умолчинию в разметке
     }
     setEffect(effects[effectItem]); // навешиваю обработчик клика на фильтры
   }
@@ -256,4 +256,76 @@ imgUploadInput.addEventListener('change', function () {
       }
     }
   });
+});
+
+// Валидация хэш-тегов
+
+var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
+
+var setHashtagValidity = function (input, hashtags, hashtag) {
+  var text;
+
+  if (!(hashtag.charAt(0) === '#')) {
+    text = 'Хэш-тег должен начинаться с символа #';
+  } else if (hashtag.charAt(1) === undefined) {
+    text = 'Хэш-тег не может состоять только из одного символа #';
+  } else if (hashtags.match(/hashtag + ' '/g) > 1) {
+    text = 'Один и тот же хэш-тег не может быть использован дважды';
+  } else {
+    text = '';
+  }
+
+  return text;
+};
+
+hashtagInput.addEventListener('invalid', function () {
+  if (hashtagInput.validity.tooShort) {
+    hashtagInput.setCustomValidity('Хэш-тег должен состоять минимум из двух символов, включая #');
+  } else {
+    hashtagInput.setCustomValidity('');
+  }
+});
+
+hashtagInput.addEventListener('input', function (evt) {
+  var target = evt.target;
+  var hashtags = target.value;
+  var hashtagsArray = hashtags.toLowerCase().split(' ');
+  var validationText;
+  for (var hashtagItem = 0; hashtagItem < hashtagsArray.length; hashtagItem++) {
+    var hashtag = hashtagsArray[hashtagItem];
+    validationText = setHashtagValidity(target, hashtags, hashtag);
+  }
+  if (hashtags.length < 2) {
+    target.setCustomValidity('Хэш-тег должен состоять минимум из двух символов, включая #');
+  } else if (validationText.length > 1) {
+    target.setCustomValidity(validationText);
+  } else if (hashtagsArray.length > 5) {
+    target.setCustomValidity('Можно указать не более 5-ти хэш-тегов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
+
+hashtagInput.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    evt.stopPropagation();
+  }
+});
+
+// Валидация комментария
+
+var descriptionInput = imgUploadOverlay.querySelector('.text__description');
+
+descriptionInput.addEventListener('invalid', function () {
+  if (hashtagInput.validity.tooLong) {
+    descriptionInput.setCustomValidity('Хэш-тег не должен превышать 20-ти символов, включая #');
+  } else {
+    descriptionInput.setCustomValidity('');
+  }
+});
+
+descriptionInput.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    evt.stopPropagation();
+  }
 });
