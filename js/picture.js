@@ -262,7 +262,7 @@ imgUploadInput.addEventListener('change', function () {
 
 var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
 
-var setHashtagValidity = function (input, hashtags, hashtag) {
+var checkHashtagValidity = function (input, hashtags, hashtag) {
   var text;
 
   if (!(hashtag.charAt(0) === '#')) {
@@ -278,14 +278,6 @@ var setHashtagValidity = function (input, hashtags, hashtag) {
   return text;
 };
 
-hashtagInput.addEventListener('invalid', function () {
-  if (hashtagInput.validity.tooShort) {
-    hashtagInput.setCustomValidity('Хэш-тег должен состоять минимум из двух символов, включая #');
-  } else {
-    hashtagInput.setCustomValidity('');
-  }
-});
-
 hashtagInput.addEventListener('input', function (evt) {
   var target = evt.target;
   var hashtags = target.value;
@@ -293,7 +285,7 @@ hashtagInput.addEventListener('input', function (evt) {
   var validationText;
   for (var hashtagItem = 0; hashtagItem < hashtagsArray.length; hashtagItem++) {
     var hashtag = hashtagsArray[hashtagItem];
-    validationText = setHashtagValidity(target, hashtags, hashtag);
+    validationText = checkHashtagValidity(target, hashtags, hashtag);
   }
   if (hashtags.length < 2) {
     target.setCustomValidity('Хэш-тег должен состоять минимум из двух символов, включая #');
@@ -318,7 +310,7 @@ var descriptionInput = imgUploadOverlay.querySelector('.text__description');
 
 descriptionInput.addEventListener('invalid', function () {
   if (hashtagInput.validity.tooLong) {
-    descriptionInput.setCustomValidity('Хэш-тег не должен превышать 20-ти символов, включая #');
+    descriptionInput.setCustomValidity('Длина комментария не может составлять больше 140 символов');
   } else {
     descriptionInput.setCustomValidity('');
   }
