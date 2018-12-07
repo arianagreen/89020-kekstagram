@@ -205,10 +205,10 @@ var setEffect = function (effect) {
     currentEffect = effect.value;
     if (currentEffect === 'none') { // При выборе эффекта «Оригинал» слайдер скрывается
       effectLevel.classList.add('hidden');
-      imgUploadPreview.style = '';
+      previewImg.style = '';
     } else {
       effectLevel.classList.remove('hidden');
-      imgUploadPreview.style = setFilter(currentEffect, 0.2);
+      previewImg.style = setFilter(currentEffect, 1);
     }
     // При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.
     previewImg.classList = ('effects__preview--' + currentEffect);
@@ -216,8 +216,8 @@ var setEffect = function (effect) {
 };
 
 var closeUploadOverlay = function () {
-  imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
+  imgUploadOverlay.classList.add('hidden');
 };
 
 imgUploadInput.addEventListener('change', function () {
@@ -318,7 +318,7 @@ pin.addEventListener('mousedown', function (evt) {
     effectLevelDepth.style.width = pin.offsetLeft + 'px';
     // pinCenter = pin.offsetLeft + pinWidth / 2;
     var effectDepth = (pin.offsetLeft / effectLevelLine.offsetWidth).toFixed(2);
-    imgUploadPreview.style = setFilter(currentEffect, effectDepth);
+    previewImg.style = setFilter(currentEffect, effectDepth);
   };
 
   var onMouseMove = function (moveEvt) {
