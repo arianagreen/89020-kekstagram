@@ -173,21 +173,11 @@ var effects = imgUploadOverlay.querySelectorAll('.effects__radio');
 var effectLevel = imgUploadOverlay.querySelector('.effect-level');
 var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
 var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
-var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+var pin = imgUploadOverlay.querySelector('.effect-level__pin');
+// var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 
-var lineCoordinates;
-var lineWidth;
 var currentEffect = '';
-
-// var resetEffect = function () {
-//   previewImg.classList = ('effects__preview--' + currentEffect);
-// };
-
-var getElementWidth = function (elem) {
-  var elemCoordinates = elem.getBoundingClientRect();
-  var elemWidth = elemCoordinates.right - elemCoordinates.left;
-  return elemWidth;
-};
 
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта записывается в поле .effect-level__value. При изменении уровня интенсивности эффекта, CSS-стили элемента .img-upload__preview обновляются следующим образом:
 // Для эффекта «Хром» — filter: grayscale(0..1);
@@ -204,6 +194,9 @@ var setFilter = function (effect, depth) {
     heat: 'filter: brightness(' + depth * 3 + ')'
   };
   effectLevelValue.setAttribute('value', depth * 100);
+  effectLevelDepth.style.width = depth * 100 + '%';
+  pin.style.left = depth * 100 + '%';
+
   return filterPresets[effect];
 };
 
@@ -229,8 +222,6 @@ var closeUploadOverlay = function () {
 
 imgUploadInput.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
-  lineCoordinates = effectLevelLine.getBoundingClientRect();
-  lineWidth = lineCoordinates.right - lineCoordinates.left;
 
   for (var effectItem = 0; effectItem < effects.length; effectItem++) {
     if (effects[effectItem].checked) { // ищу установленный по умолчанию эффект
@@ -239,14 +230,7 @@ imgUploadInput.addEventListener('change', function () {
     }
     setEffect(effects[effectItem]); // навешиваю обработчик клика на фильтры
   }
-  // При смене эффекта, выбором одного из значений среди радиокнопок .effects__radio, добавить картинке внутри .img-upload__preview CSS-класс, соответствующий эффекту. Например, если выбран эффект .effect-chrome, изображению нужно добавить класс effects__preview--chrome
-  effectLevelPin.addEventListener('mouseup', function (evt) {
-    var pinX = evt.clientX;
-    var pinWidth = getElementWidth(effectLevelPin);
-    var pinCenterPosition = pinX + pinWidth / 2 - lineCoordinates.left;
-    var effectDepth = (pinCenterPosition / lineWidth).toFixed(2);
-    imgUploadPreview.style = setFilter(currentEffect, effectDepth);
-  });
+
   // закрытие окна загрузки изображения
   uploadCloseButton.addEventListener('click', closeUploadOverlay);
   window.addEventListener('keydown', function (evt) {
@@ -263,19 +247,15 @@ imgUploadInput.addEventListener('change', function () {
 var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
 
 var checkHashtagValidity = function (input, hashtags, hashtag) {
-  var text;
-
   if (!(hashtag.charAt(0) === '#')) {
-    text = 'Хэш-тег должен начинаться с символа #';
+    return 'Хэш-тег должен начинаться с символа #';
   } else if (hashtag.charAt(1) === undefined) {
-    text = 'Хэш-тег не может состоять только из одного символа #';
+    return 'Хэш-тег не может состоять только из одного символа #';
   } else if (hashtags.match(/hashtag + ' '/g) > 1) {
-    text = 'Один и тот же хэш-тег не может быть использован дважды';
+    return 'Один и тот же хэш-тег не может быть использован дважды';
   } else {
-    text = '';
+    return '';
   }
-
-  return text;
 };
 
 hashtagInput.addEventListener('input', function (evt) {
@@ -320,4 +300,62 @@ descriptionInput.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     evt.stopPropagation();
   }
+});
+
+
+// Перетаскивание пина
+
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startX = evt.clientX;
+  var pinWidth = pin.offsetWidth;
+  // var pinCenter = pin.offsetLeft + pinWidth / 2;
+
+  var dragged = false;
+
+  var changeSlider = function () {
+    effectLevelDepth.style.width = pin.offsetLeft + 'px';
+    // pinCenter = pin.offsetLeft + pinWidth / 2;
+    var effectDepth = (pin.offsetLeft / effectLevelLine.offsetWidth).toFixed(2);
+    imgUploadPreview.style = setFilter(currentEffect, effectDepth);
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = startX - moveEvt.clientX;
+
+    startX = moveEvt.clientX;
+
+    var newPinOffset = pin.offsetLeft - shift;
+
+    if (newPinOffset > effectLevelLine.offsetWidth) {
+      pin.style.left = effectLevelLine.offsetWidth + 'px';
+    } else if (newPinOffset < 0) {
+      pin.style.left = 0 + 'px';
+    } else {
+      pin.style.left = pin.offsetLeft - shift + 'px';
+    }
+
+    changeSlider();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (!dragged) {
+      startX = pin.getBoundingClientRect().left;
+      var shift = startX - upEvt.clientX;
+      pin.style.left = pin.offsetLeft - shift - pinWidth / 2 + 'px';
+      changeSlider();
+    }
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
