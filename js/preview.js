@@ -19,8 +19,9 @@ window.renderBigPhoto = function (photo) {
 
   var createBigComment = function (comment) {
     var bigCommentElement = bigComment.cloneNode(true);
-    bigCommentElement.querySelector('.social__picture').src = 'img/avatar-' + window.util.getRandomInt(1, 7) + '.svg';
-    bigCommentElement.querySelector('.social__text').textContent = comment;
+    // bigCommentElement.querySelector('.social__picture').src = 'img/avatar-' + window.util.getRandomInt(1, 7) + '.svg';
+    bigCommentElement.querySelector('.social__picture').src = comment.avatar;
+    bigCommentElement.querySelector('.social__text').textContent = comment.message;
     return bigCommentElement;
   };
 
