@@ -31,7 +31,7 @@
     photoContainer.appendChild(photoFragment);
   };
 
-  window.load(onLoad)
+  window.load(onLoad);
 
   // var photos = window.makePhotos();
   // console.log(photos);
