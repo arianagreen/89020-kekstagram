@@ -190,7 +190,6 @@
     }
   });
 
-
   hashtagInput.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       evt.stopPropagation();
@@ -215,11 +214,11 @@
     }
   });
 
-
   // Отправка формы
 
   var createPopup = function (popupName) {
     var popup = document.querySelector('#' + popupName).content.querySelector('.' + popupName).cloneNode(true);
+    // var popup = document.querySelector('#' + popupName + ' ' + '.' + popupName).cloneNode(true);
     var popupButtons = popup.querySelectorAll('.' + popupName + '__button');
     var closePopup = function () {
       popup.remove();
@@ -240,44 +239,11 @@
   var onLoad = function () {
     closeUploadOverlay();
     createPopup('success');
-
-    // var successPopup = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-    // var successButtons = successPopup.querySelectorAll('.success__button');
-    // var closeError = function () {
-    //   successPopup.remove();
-    // };
-    // window.addEventListener('keydown', function (evt) {
-    //   window.util.isEscEvent(evt, closeError);
-    // });
-    //
-    // successPopup.addEventListener('click', closeError);
-    //
-    // for (var i = 0; i < successButtons.length; i++) {
-    //   successButtons[i].addEventListener('click', closeError);
-    // }
-    // main.insertAdjacentElement('afterbegin', successPopup);
   };
 
   var onError = function () {
     closeUploadOverlay();
     createPopup('error');
-    // var errorPopup = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-    // var errorButtons = errorPopup.querySelectorAll('.error__button');
-    //
-    // var closeError = function () {
-    //   errorPopup.remove();
-    // };
-    //
-    // window.addEventListener('keydown', function (evt) {
-    //   window.util.isEscEvent(evt, closeError);
-    // });
-    //
-    // errorPopup.addEventListener('click', closeError);
-    //
-    // for (var i = 0; i < errorButtons.length; i++) {
-    //   errorButtons[i].addEventListener('click', closeError);
-    // }
-    // main.insertAdjacentElement('afterbegin', errorPopup);
   };
 
   form.addEventListener('submit', function (evt) {

@@ -28,6 +28,7 @@ window.renderBigPhoto = function (photo) {
   for (var i = 0; i < photo.comments.length; i++) {
     bigCommentFragment.appendChild(createBigComment(photo.comments[i]));
   }
+
   // очистка списка комментариев
   while (bigCommentsContainer.hasChildNodes()) {
     bigCommentsContainer.removeChild(bigCommentsContainer.firstChild);
