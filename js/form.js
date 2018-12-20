@@ -2,6 +2,8 @@
 
 (function () {
   // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения
+  var main = document.querySelector('main');
+  var form = document.querySelector('.img-upload__form');
   var imgUploadInput = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var uploadCloseButton = imgUploadOverlay.querySelector('#upload-cancel');
@@ -54,6 +56,17 @@
   };
 
   var closeUploadOverlay = function () {
+    for (var i = 0; i < effects.length; i++) {
+      // effects[i].ckecked = effects[i].value === 'heat' ? true : false;
+
+      if (effects[i].value === 'heat') {
+        effects[i].checked = true;
+      } else {
+        effects[i].checked = false;
+      }
+    }
+
+    setFilter('heat', 0.2);
     imgUploadInput.value = '';
     imgUploadOverlay.classList.add('hidden');
   };
@@ -154,7 +167,8 @@
     var target = evt.target;
     var hashtags = target.value;
     var hashtagsArray = hashtags.toLowerCase().split(' ');
-    var validationText;
+    var validationText = '';
+
     for (var hashtagItem = 0; hashtagItem < hashtagsArray.length; hashtagItem++) {
       var hashtag = hashtagsArray[hashtagItem];
       validationText = checkHashtagValidity(target, hashtags, hashtag);
@@ -168,8 +182,13 @@
     } else {
       target.setCustomValidity('');
     }
-  });
 
+    if (validationText.length > 1) {
+      target.style.borderColor = 'red';
+    } else {
+      target.style = '';
+    }
+  });
 
   hashtagInput.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -194,4 +213,42 @@
       evt.stopPropagation();
     }
   });
+
+  // Отправка формы
+
+  var createPopup = function (popupName) {
+    var popup = document.querySelector('#' + popupName).content.querySelector('.' + popupName).cloneNode(true);
+    // var popup = document.querySelector('#' + popupName + ' ' + '.' + popupName).cloneNode(true);
+    var popupButtons = popup.querySelectorAll('.' + popupName + '__button');
+    var closePopup = function () {
+      popup.remove();
+    };
+
+    window.addEventListener('keydown', function (evt) {
+      window.util.isEscEvent(evt, closePopup);
+    });
+
+    popup.addEventListener('click', closePopup);
+
+    for (var i = 0; i < popupButtons.length; i++) {
+      popupButtons[i].addEventListener('click', closePopup);
+    }
+    main.insertAdjacentElement('afterbegin', popup);
+  };
+
+  var onLoad = function () {
+    closeUploadOverlay();
+    createPopup('success');
+  };
+
+  var onError = function () {
+    closeUploadOverlay();
+    createPopup('error');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.upload(new FormData(form), onLoad, onError);
+    evt.preventDefault();
+  });
+
 }());
