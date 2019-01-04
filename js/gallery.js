@@ -72,19 +72,14 @@
     var lastTimeout;
 
     var onButtonClick = function (evt) {
-      // var action = evt.target.id;
-      // var array = filterActions[action]();
       window.util.switchButton(evt.target);
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
-      } else {
-        lastTimeout = window.setTimeout(function () {
-          console.log('таймаут закончился');
-          var action = evt.target.id;
-          renderPreviews(filterActions[action]());
-        }, 500);
       }
-      // renderPreviews(array);
+      lastTimeout = window.setTimeout(function () {
+        var action = evt.target.id;
+        renderPreviews(filterActions[action]());
+      }, 500);
     };
 
     var filterButtons = document.querySelectorAll('.img-filters__button');
