@@ -24,8 +24,6 @@
     };
 
     var receivedPhotos = photos;
-    var receivedPhotosCopy;
-
 
     // Обработчики изменения фильтров
 
@@ -54,37 +52,45 @@
         return receivedPhotos;
       },
       'filter-new': function () {
-        receivedPhotosCopy = receivedPhotos.slice();
         var newPhotos = [];
-
-        receivedPhotosCopy.sort(function () {
+        var receivedPhotosSorted = receivedPhotos.slice().sort(function () {
           return 0.5 - Math.random();
         });
 
         for (var i = 0; i < 10; i++) {
-          newPhotos.push(receivedPhotosCopy[i]);
+          newPhotos.push(receivedPhotosSorted[i]);
         }
         return newPhotos;
       },
       'filter-discussed': function () {
-        receivedPhotosCopy = receivedPhotos.slice();
-        var discussedPhotos = receivedPhotosCopy.sort(function (left, right) {
+        return receivedPhotos.slice().sort(function (left, right) {
           return right.comments.length - left.comments.length;
         });
-        return discussedPhotos;
       }
     };
 
-    var refresh = function (evt) {
-      var action = evt.target.id;
+    var lastTimeout;
+
+    var onButtonClick = function (evt) {
+      // var action = evt.target.id;
+      // var array = filterActions[action]();
       window.util.switchButton(evt.target);
-      renderPreviews(filterActions[action]());
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      } else {
+        lastTimeout = window.setTimeout(function () {
+          console.log('таймаут закончился');
+          var action = evt.target.id;
+          renderPreviews(filterActions[action]());
+        }, 500);
+      }
+      // renderPreviews(array);
     };
 
     var filterButtons = document.querySelectorAll('.img-filters__button');
 
     filterButtons.forEach(function (button) {
-      button.addEventListener('click', refresh);
+      button.addEventListener('click', onButtonClick);
     });
 
     var clearPhotos = function (node) {
