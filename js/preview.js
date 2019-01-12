@@ -67,6 +67,7 @@ window.renderBigPhoto = function (photo) {
   while (bigCommentsContainer.hasChildNodes()) {
     bigCommentsContainer.removeChild(bigCommentsContainer.firstChild);
   }
+  // bigCommentsContainer.innerHTNL = '';
 
   if (photoComments.length < 5) {
     renderComments(0, photoComments.length);
