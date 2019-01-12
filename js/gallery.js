@@ -47,6 +47,8 @@
 
     renderPreviews(receivedPhotos);
 
+    var PHOTOS_AMOUNT = 10;
+
     var filterActions = {
       'filter-popular': function () {
         return receivedPhotos;
@@ -57,7 +59,7 @@
           return 0.5 - Math.random();
         });
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < PHOTOS_AMOUNT; i++) {
           newPhotos.push(receivedPhotosSorted[i]);
         }
         return newPhotos;
