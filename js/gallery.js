@@ -5,11 +5,11 @@
 
 (function () {
   var onLoad = function (photos) {
+    var PHOTOS_AMOUNT = 10;
 
     var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
     var renderPhoto = function (photo) {
-
       var photoElement = photoTemplate.cloneNode(true);
 
       photoElement.querySelector('.picture__img').src = photo.url;
@@ -34,9 +34,9 @@
       var photoFragment = document.createDocumentFragment();
       var photoContainer = document.querySelector('.pictures');
 
-      for (var i = 0; i < photosArray.length; i++) {
-        photoFragment.appendChild(renderPhoto(photosArray[i]));
-      }
+      photosArray.forEach(function (photoItem) {
+        photoFragment.appendChild(renderPhoto(photoItem));
+      });
 
       if (photoContainer.querySelector('.picture')) {
         clearPhotos(photoContainer);
@@ -47,9 +47,7 @@
 
     renderPreviews(receivedPhotos);
 
-    var PHOTOS_AMOUNT = 10;
-
-    var filterActions = {
+    var FilterActions = {
       'filter-popular': function () {
         return receivedPhotos;
       },
@@ -80,7 +78,7 @@
       }
       lastTimeout = window.setTimeout(function () {
         var action = evt.target.id;
-        renderPreviews(filterActions[action]());
+        renderPreviews(FilterActions[action]());
       }, 500);
     };
 

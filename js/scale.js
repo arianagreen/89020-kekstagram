@@ -6,18 +6,16 @@
   var scaleBigger = document.querySelector('.scale__control--bigger');
   var scaleTarget = document.querySelector('.img-upload__preview');
   var STEP = 25;
+  var MAX_SCALE = 100;
 
-  var currentScale;
-  var newScale;
-
-  var setScale = function (scale) {
-    if (scale <= 25) {
-      scale = 25;
+  window.setScale = function (scale) {
+    if (scale <= STEP) {
+      scale = STEP;
       scaleSmaller.setAttribute('disabled', 'disabled');
     }
 
-    if (scale >= 100) {
-      scale = 100;
+    if (scale >= MAX_SCALE) {
+      scale = MAX_SCALE;
       scaleBigger.setAttribute('disabled', 'disabled');
     }
 
@@ -27,15 +25,11 @@
 
   scaleSmaller.addEventListener('click', function () {
     scaleBigger.removeAttribute('disabled', 'disabled');
-    currentScale = parseInt(scaleInput.value, 10);
-    newScale = currentScale - STEP;
-    setScale(newScale);
+    window.setScale(parseInt(scaleInput.value, 10) - STEP);
   });
 
   scaleBigger.addEventListener('click', function () {
     scaleSmaller.removeAttribute('disabled', 'disabled');
-    currentScale = parseInt(scaleInput.value, 10);
-    newScale = currentScale + STEP;
-    setScale(newScale);
+    window.setScale(parseInt(scaleInput.value, 10) + STEP);
   });
 })();
