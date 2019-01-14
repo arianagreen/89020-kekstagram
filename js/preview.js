@@ -3,7 +3,6 @@
 // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива
 
 window.renderBigPhoto = function (photo) {
-  // var photo = photo;
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoCloseButton = bigPhoto.querySelector('#picture-cancel');
   var moreComments = bigPhoto.querySelector('.comments-loader');
@@ -21,11 +20,9 @@ window.renderBigPhoto = function (photo) {
   var bigCommentsContainer = document.querySelector('.social__comments');
   var bigComment = document.querySelector('.social__comment');
   var commentsShownIndicator = document.querySelector('.comments-shown');
-  // var bigCommentFragment = document.createDocumentFragment();
 
   var createBigComment = function (comment) {
     var bigCommentElement = bigComment.cloneNode(true);
-    // bigCommentElement.querySelector('.social__picture').src = 'img/avatar-' + window.util.getRandomInt(1, 7) + '.svg';
     bigCommentElement.querySelector('.social__picture').src = comment.avatar;
     bigCommentElement.querySelector('.social__text').textContent = comment.message;
     return bigCommentElement;
@@ -67,7 +64,6 @@ window.renderBigPhoto = function (photo) {
   while (bigCommentsContainer.hasChildNodes()) {
     bigCommentsContainer.removeChild(bigCommentsContainer.firstChild);
   }
-  // bigCommentsContainer.innerHTNL = '';
 
   if (photoComments.length < 5) {
     renderComments(0, photoComments.length);

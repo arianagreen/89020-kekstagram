@@ -9,7 +9,6 @@
   var uploadCloseButton = imgUploadOverlay.querySelector('#upload-cancel');
   var ESC_KEYCODE = 27;
 
-  // var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview');
   var previewImg = imgUploadOverlay.querySelector('.img-upload__preview img');
   var effects = imgUploadOverlay.querySelectorAll('.effects__radio');
   var effectLevel = imgUploadOverlay.querySelector('.effect-level');
@@ -36,8 +35,6 @@
     effectLevelDepth.style.width = depth * 100 + '%';
     pin.style.left = depth * 100 + '%';
     previewImg.style = filterPresets[effect];
-
-    // return filterPresets[effect];
   };
 
   var setEffect = function (effect) {
@@ -56,15 +53,9 @@
   };
 
   var closeUploadOverlay = function () {
-    for (var i = 0; i < effects.length; i++) {
-      // effects[i].ckecked = effects[i].value === 'heat' ? true : false;
-
-      if (effects[i].value === 'heat') {
-        effects[i].checked = true;
-      } else {
-        effects[i].checked = false;
-      }
-    }
+    effects.forEach(function (effect) {
+      effect.ckecked = effects.value === 'heat';
+    });
 
     setFilter('heat', 0.2);
     imgUploadInput.value = '';
@@ -73,14 +64,15 @@
 
   imgUploadInput.addEventListener('change', function () {
     imgUploadOverlay.classList.remove('hidden');
+    window.setScale(100);
 
-    for (var i = 0; i < effects.length; i++) {
-      if (effects[i].checked) { // ищу установленный по умолчанию эффект
-        currentEffect = effects[i].value;
+    effects.forEach(function (effect) {
+      if (effect.checked) { // ищу установленный по умолчанию эффект
+        currentEffect = effect.value;
         setFilter(currentEffect, effectLevelValue.value / 100);
       }
-      setEffect(effects[i]); // навешиваю обработчик клика на фильтры
-    }
+      setEffect(effect); // навешиваю обработчик клика на фильтры
+    });
 
     // закрытие окна загрузки изображения
     uploadCloseButton.addEventListener('click', closeUploadOverlay);
@@ -102,7 +94,6 @@
 
     var changeSlider = function () {
       effectLevelDepth.style.width = pin.offsetLeft + 'px';
-      // pinCenter = pin.offsetLeft + pinWidth / 2;
       var effectDepth = (pin.offsetLeft / effectLevelLine.offsetWidth).toFixed(2);
       setFilter(currentEffect, effectDepth);
     };
@@ -169,11 +160,11 @@
     var hashtagsArray = hashtags.toLowerCase().split(' ');
     var validationText = '';
 
-    for (var hashtagItem = 0; hashtagItem < hashtagsArray.length; hashtagItem++) {
-      var hashtag = hashtagsArray[hashtagItem];
-      validationText = checkHashtagValidity(target, hashtags, hashtag);
-    }
-    if (hashtags.length < 2) {
+    hashtagsArray.forEach(function (hashtagItem) {
+      validationText = checkHashtagValidity(target, hashtags, hashtagItem);
+    });
+
+    if (hashtags.length < 3) {
       target.setCustomValidity('Хэш-тег должен состоять минимум из двух символов, включая #');
     } else if (validationText.length > 1) {
       target.setCustomValidity(validationText);
@@ -218,7 +209,6 @@
 
   var createPopup = function (popupName) {
     var popup = document.querySelector('#' + popupName).content.querySelector('.' + popupName).cloneNode(true);
-    // var popup = document.querySelector('#' + popupName + ' ' + '.' + popupName).cloneNode(true);
     var popupButtons = popup.querySelectorAll('.' + popupName + '__button');
     var closePopup = function () {
       popup.remove();
@@ -230,9 +220,10 @@
 
     popup.addEventListener('click', closePopup);
 
-    for (var i = 0; i < popupButtons.length; i++) {
-      popupButtons[i].addEventListener('click', closePopup);
-    }
+    popupButtons.forEach(function (button) {
+      button.addEventListener('click', closePopup);
+    });
+
     main.insertAdjacentElement('afterbegin', popup);
   };
 
@@ -250,5 +241,4 @@
     window.upload(new FormData(form), onLoad, onError);
     evt.preventDefault();
   });
-
 }());
