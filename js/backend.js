@@ -2,15 +2,15 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
-  var serverTime = 10000;
-  var statusOk = 200;
+  var SERVER_TIME = 10000;
+  var STATUS_OK = 200;
 
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === statusOk) {
+      if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа:' + xhr.status + ' ' + xhr.statusText);
@@ -25,7 +25,7 @@
       onError('Превышено время ожидания ответа');
     });
 
-    xhr.timeout = serverTime; // 10s
+    xhr.timeout = SERVER_TIME; // 10s
 
     return xhr;
   };

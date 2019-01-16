@@ -3,7 +3,7 @@
 // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива
 
 window.renderBigPhoto = function (photo) {
-  var commentsPack = 5;
+  var COMMENTS_PACK = 5;
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoCloseButton = bigPhoto.querySelector('#picture-cancel');
   var moreComments = bigPhoto.querySelector('.comments-loader');
@@ -47,9 +47,9 @@ window.renderBigPhoto = function (photo) {
     var commentsShown = bigCommentsContainer.querySelectorAll('.social__comment');
     if (comments.length > commentsShown.length) {
       var restComments = comments.length - commentsShown.length;
-      if (restComments > commentsPack) {
-        renderComments(commentsShown.length, commentsShown.length + commentsPack);
-        commentsShownIndicator.textContent = commentsShown.length + commentsPack;
+      if (restComments > COMMENTS_PACK) {
+        renderComments(commentsShown.length, commentsShown.length + COMMENTS_PACK);
+        commentsShownIndicator.textContent = commentsShown.length + COMMENTS_PACK;
       } else {
         renderComments(commentsShown.length, commentsShown.length + restComments);
         commentsShownIndicator.textContent = commentsShown.length + restComments;
@@ -66,13 +66,13 @@ window.renderBigPhoto = function (photo) {
     bigCommentsContainer.removeChild(bigCommentsContainer.firstChild);
   }
 
-  if (photoComments.length < commentsPack) {
+  if (photoComments.length < COMMENTS_PACK) {
     renderComments(0, photoComments.length);
     commentsShownIndicator.textContent = photoComments.length;
     moreComments.classList.add('hidden');
   } else {
-    renderComments(0, commentsPack);
-    commentsShownIndicator.textContent = commentsPack;
+    renderComments(0, COMMENTS_PACK);
+    commentsShownIndicator.textContent = COMMENTS_PACK;
   }
 
 
