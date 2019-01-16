@@ -1,12 +1,12 @@
 'use strict';
 
 (function () {
+  var STEP = 25;
+  var MAX_SCALE = 100;
   var scaleInput = document.querySelector('.scale__control--value');
   var scaleSmaller = document.querySelector('.scale__control--smaller');
   var scaleBigger = document.querySelector('.scale__control--bigger');
   var scaleTarget = document.querySelector('.img-upload__preview');
-  var STEP = 25;
-  var MAX_SCALE = 100;
 
   window.setScale = function (scale) {
     if (scale <= STEP) {
