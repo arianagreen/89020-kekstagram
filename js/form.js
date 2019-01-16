@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения
   var main = document.querySelector('main');
   var form = document.querySelector('.img-upload__form');
   var imgUploadInput = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var uploadCloseButton = imgUploadOverlay.querySelector('#upload-cancel');
-  var ESC_KEYCODE = 27;
 
   var previewImg = imgUploadOverlay.querySelector('.img-upload__preview img');
   var effects = imgUploadOverlay.querySelectorAll('.effects__radio');
@@ -142,12 +142,16 @@
 
   var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
 
-  var checkHashtagValidity = function (input, hashtags, hashtag) {
+  var hasDuplicate = function (elem, array) {
+    return (array.lastIndexOf(elem) !== array.indexOf(elem));
+  };
+
+  var checkHashtagValidity = function (input, hashtagsArr, hashtag) {
     if (!(hashtag.charAt(0) === '#')) {
       return 'Хэш-тег должен начинаться с символа #';
     } else if (hashtag.charAt(1) === undefined) {
       return 'Хэш-тег не может состоять только из одного символа #';
-    } else if (hashtags.match(/hashtag + ' '/g) > 1) {
+    } else if (hasDuplicate(hashtag, hashtagsArr)) {
       return 'Один и тот же хэш-тег не может быть использован дважды';
     } else {
       return '';
@@ -161,7 +165,7 @@
     var validationText = '';
 
     hashtagsArray.forEach(function (hashtagItem) {
-      validationText = checkHashtagValidity(target, hashtags, hashtagItem);
+      validationText = checkHashtagValidity(target, hashtagsArray, hashtagItem);
     });
 
     if (hashtags.length < 3) {

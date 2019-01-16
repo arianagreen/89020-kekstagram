@@ -6,6 +6,7 @@
 (function () {
   var onLoad = function (photos) {
     var PHOTOS_AMOUNT = 10;
+    var userTimeout = 500;
 
     var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -79,7 +80,7 @@
       lastTimeout = window.setTimeout(function () {
         var action = evt.target.id;
         renderPreviews(FilterActions[action]());
-      }, 500);
+      }, userTimeout);
     };
 
     var filterButtons = document.querySelectorAll('.img-filters__button');
