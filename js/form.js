@@ -2,7 +2,6 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-  // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения
   var main = document.querySelector('main');
   var form = document.querySelector('.img-upload__form');
   var imgUploadInput = document.querySelector('#upload-file');
@@ -16,6 +15,8 @@
   var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
   var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
   var pin = imgUploadOverlay.querySelector('.effect-level__pin');
+  var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
+  var descriptionInput = imgUploadOverlay.querySelector('.text__description');
 
   // Первоначальное значение переменной currentEffect устанавливается в момент открытия формы (из отмеченного в разметке checkbox'а)
   // Дальше значение обновляется при каждой смене эффекта
@@ -59,6 +60,8 @@
 
     setFilter('heat', 0.2);
     imgUploadInput.value = '';
+    hashtagInput.value = '';
+    descriptionInput.value = '';
     imgUploadOverlay.classList.add('hidden');
   };
 
@@ -88,7 +91,6 @@
 
     var startX = evt.clientX;
     var pinWidth = pin.offsetWidth;
-    // var pinCenter = pin.offsetLeft + pinWidth / 2;
 
     var dragged = false;
 
@@ -140,8 +142,6 @@
 
   // Валидация хэш-тегов
 
-  var hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
-
   var hasDuplicate = function (elem, array) {
     return (array.lastIndexOf(elem) !== array.indexOf(elem));
   };
@@ -192,8 +192,6 @@
   });
 
   // Валидация комментария
-
-  var descriptionInput = imgUploadOverlay.querySelector('.text__description');
 
   descriptionInput.addEventListener('invalid', function () {
     if (hashtagInput.validity.tooLong) {
